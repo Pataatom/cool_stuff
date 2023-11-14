@@ -16,7 +16,7 @@ time.sleep(1)
 print(password)
 time.sleep(1)
 choice = input("do you want to save password? ")
-if choice.lower() == "yes" or "y":
+if choice.lower() in ("yes", "y"):
     usable_list = string.ascii_letters + string.punctuation + string.digits + " "
     usable_list = list(usable_list)
     key = ['(', 'q', '{', '>', ',', 'm', '9', 'a', '.', '3', '}', 'o', '_', ']', 'v', 'Y', '/', '!', 'M', 't', '6', '$', 'c', 'T', '|', 'f', '"', '\\', 'V', 'g', '2', 'r', ';', 'W', 'G', ')', 'i', 'K', '[', '7', 's', '8', 'S', '1', 'Z', 'y', 'C', '*', 'I', 'e', '#', 'n', 'P', '~', '<', '^', 'J', 'D', '?', 'O', '5', 'h', 'z', '-', 'd', 'j', 'B', 'R', 'X', 'H', "'", 'A', ':', '`', 'Q', 'u', '&', 'U', 'F', '@', 'b', 'p', '=', 'E', '%', '+', 'L', 'k', 'l', 'N', '4', 'x', '0', 'w']
