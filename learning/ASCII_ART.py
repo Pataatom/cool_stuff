@@ -1,6 +1,8 @@
 from PIL import Image
+from tqdm import tqdm
 
 ascii_characters_by_surface_10 = " .:-=+*#%@"
+ascii_characters_by_surface_65 = '`^"' + r",:;Il!i~+_-?][}{1)(|\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 ascii_characters_by_surface = ascii_characters_by_surface_10
 
 # stupid reversing string
@@ -13,24 +15,42 @@ for char in ascii_list:
 
 
 def pixel_to_ascii(pixel, extension):
-    if
-    print(pixel)
-    if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer
-        pixel_brightness = pixel
-        max_brightness = 255
-    else:  # Extract color channels from the pixel tuple
-        (R, G, B, A) = pixel
-        pixel_brightness = 0.299 * R + 0.587 * G + 0.114 * B
-        max_brightness = 0.299 * 255 + 0.587 * 255 + 0.114 * 255
-        brightness_weight = len(ascii_characters_by_surface) / max_brightness
-        index = int(pixel_brightness * brightness_weight)
-        if index == 0 and A > 0:  # is it black???
-            pass
-        else:
-            index -= 1
-        return ascii_characters_by_surface[index]
-        # sadly, with this logic, the true white (255, 255, 255, 255) will never be " " (blank)
-        # I know there is some clear solution to this, but I am just too dumb
+    if extension == ".png":
+        if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer(never needed this)
+            pixel_brightness = pixel
+            max_brightness = 255
+        else:  # Extract color channels from the pixel tuple
+            try:
+                (R, G, B, A) = pixel
+            except:
+                (R, G, B) = pixel
+                A = 1
+            pixel_brightness = 0.299 * R + 0.587 * G + 0.114 * B
+            max_brightness = 0.299 * 255 + 0.587 * 255 + 0.114 * 255
+            brightness_weight = len(ascii_characters_by_surface) / max_brightness
+            index = int(pixel_brightness * brightness_weight)
+            if index == 0 and A > 0:  # is it black???
+                pass
+            else:
+                index -= 1
+            return ascii_characters_by_surface[index]
+    elif extension == ".jpg":
+        if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer(never needed this)
+            pixel_brightness = pixel
+            max_brightness = 255
+        else:  # Extract color channels from the pixel tuple
+            (R, G, B) = pixel
+            pixel_brightness = 0.299 * R + 0.587 * G + 0.114 * B
+            max_brightness = 0.299 * 255 + 0.587 * 255 + 0.114 * 255
+            brightness_weight = len(ascii_characters_by_surface) / max_brightness
+            index = int(pixel_brightness * brightness_weight)
+            if index == 0:  # is it black???
+                pass
+            else:
+                index -= 1
+            return ascii_characters_by_surface[index]
+            # sadly, with this logic, the true white (255, 255, 255, 255) will never be " " (blank)
+            # I know there is some clear solution to this, but I am just too dumb
 
 
 def main(pic):
@@ -47,7 +67,7 @@ def main(pic):
     new_height = int(height*0.3676470588235294)
     image = image.resize((width, new_height))
     ascii_art = []
-    for y in range(new_height):
+    for y in tqdm(range(new_height)):
         line = ""
         for x in range(width):
             px = image.getpixel((x, y))
@@ -64,4 +84,4 @@ def saving_ascii_art(ascii_art):
 
 
 if __name__ == '__main__':
-    main(r"C:\Users\pataa\Downloads\troll.jpg")
+    main(r"C:\Users\pataa\Downloads\pixil-frame-0.png")
