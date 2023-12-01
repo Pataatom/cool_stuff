@@ -1,6 +1,10 @@
-from PIL import Image
+import tkinter as tk
+from tkinterdnd2 import TkinterDnD, DND_FILES
+import os
+from PIL import Image, ImageTk
 from tqdm import tqdm
 
+file_name = ""
 ascii_characters_by_surface_10 = " .:-=+*#%@"
 ascii_characters_by_surface_65 = '`^"' + r",:;Il!i~+_-?][}{1)(|\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 ascii_characters_by_surface = ascii_characters_by_surface_10
@@ -53,7 +57,7 @@ def pixel_to_ascii(pixel, extension):
             # I know there is some clear solution to this, but I am just too dumb
 
 
-def main(pic):
+def working_with_picture(pic, file_name):
     if ".jpg" in pic:
         extension = ".jpg"
     elif ".png" in pic:
@@ -73,15 +77,40 @@ def main(pic):
             px = image.getpixel((x, y))
             line += pixel_to_ascii(px, extension)
         ascii_art.append(line)
-    saving_ascii_art(ascii_art)  # Call the saving_ascii_art function to save the ASCII art
+    saving_ascii_art(ascii_art, file_name)  # Call the saving_ascii_art function to save the ASCII art
 
 
-def saving_ascii_art(ascii_art):
-    with open("ascii_image.txt", "w") as f:
+def saving_ascii_art(ascii_art, file_name):
+    with open(f"{file_name}_ascii_image.txt", "w") as f:
         for line in ascii_art:
             f.write(line)
             f.write("\n")
 
+def on_drop(event):
+    file_path = event.data
+    file_name = os.path.basename(file_path)
+    file_name = file_name.split(".")[0] # get only the name of the file and not the extension
+    working_with_picture(str(file_path), file_name)
+    # return file_name
+
+
+def main():
+    root = TkinterDnD.Tk()
+    root.title("Ascii_gene")
+    root.geometry("250x150")
+
+    img = Image.open(r"C:\Users\User\PycharmProjects\cool_stuff\more.png")
+    img = ImageTk.PhotoImage(img)
+
+    label = tk.Label(root, text="↓ Drag and drop images on plus ↓")
+    label.pack(padx=10, pady=10)
+
+    img_label = tk.Label(root, image=img)
+    img_label.pack(padx=10, pady=10)
+
+    img_label.drop_target_register(DND_FILES)
+    img_label.dnd_bind('<<Drop>>', on_drop)
+    root.mainloop()
 
 if __name__ == '__main__':
-    main(r"C:\Users\pataa\Downloads\pixil-frame-0.png")
+    main()

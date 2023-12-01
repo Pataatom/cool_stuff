@@ -1,9 +1,5 @@
-import tkinter as tk
-from tkinterdnd2 import TkinterDnD, DND_FILES
-import os
 from PIL import Image
 from tqdm import tqdm
-
 
 ascii_characters_by_surface_10 = " .:-=+*#%@"
 ascii_characters_by_surface_65 = '`^"' + r",:;Il!i~+_-?][}{1)(|\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
@@ -57,7 +53,7 @@ def pixel_to_ascii(pixel, extension):
             # I know there is some clear solution to this, but I am just too dumb
 
 
-def working_with_picture(pic):
+def main(pic):
     if ".jpg" in pic:
         extension = ".jpg"
     elif ".png" in pic:
@@ -86,19 +82,6 @@ def saving_ascii_art(ascii_art):
             f.write(line)
             f.write("\n")
 
-def on_drop(event):
-    file_path = event.data
-    file_name = os.path.basename(file_path)
-    working_with_picture(str(file_path))
-
-
-def main():
-    root = TkinterDnD.Tk()
-    label = tk.Label(root, text="Drag and drop files onto this label")
-    label.pack(padx=10, pady=10)
-    label.drop_target_register(DND_FILES)
-    label.dnd_bind('<<Drop>>', on_drop)
-    root.mainloop()
 
 if __name__ == '__main__':
-    main()
+    main(r"C:\Users\pataa\Downloads\pixil-frame-0.png")
