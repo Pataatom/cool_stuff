@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 import os
@@ -20,9 +21,13 @@ for char in ascii_list:
 
 def pixel_to_ascii(pixel, extension):
     if extension == ".png":
-        if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer(never needed this)
+        if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer
             pixel_brightness = pixel
             max_brightness = 255
+            brightness_weight = len(ascii_characters_by_surface) / max_brightness
+            index = int(pixel_brightness * brightness_weight)
+            index -= 1
+
         else:  # Extract color channels from the pixel tuple
             try:
                 (R, G, B, A) = pixel
@@ -37,11 +42,15 @@ def pixel_to_ascii(pixel, extension):
                 pass
             else:
                 index -= 1
-            return ascii_characters_by_surface[index]
+        return ascii_characters_by_surface[index]
     elif extension == ".jpg":
-        if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer(never needed this)
+        if isinstance(pixel, int):  # Handle grayscale images where the pixel is an integer
             pixel_brightness = pixel
             max_brightness = 255
+            brightness_weight = len(ascii_characters_by_surface) / max_brightness
+            index = int(pixel_brightness * brightness_weight)
+            index -= 1
+
         else:  # Extract color channels from the pixel tuple
             (R, G, B) = pixel
             pixel_brightness = 0.299 * R + 0.587 * G + 0.114 * B
@@ -52,9 +61,12 @@ def pixel_to_ascii(pixel, extension):
                 pass
             else:
                 index -= 1
-            return ascii_characters_by_surface[index]
-            # sadly, with this logic, the true white (255, 255, 255, 255) will never be " " (blank)
-            # I know there is some clear solution to this, but I am just too dumb
+        return ascii_characters_by_surface[index]
+        # sadly, with this logic, the true white (255, 255, 255, 255) will never be " " (blank)
+        # I know there is some clear solution to this, but I am just too dumb
+    else:
+        print("I don't support this extension, sry")
+        time.sleep()
 
 
 def working_with_picture(pic, file_name):
@@ -99,17 +111,17 @@ def main():
     root.title("Ascii_gene")
     root.geometry("250x150")
 
-    img = Image.open(r"C:\Users\User\PycharmProjects\cool_stuff\more.png")
+    img = Image.open(r"more.png")
     img = ImageTk.PhotoImage(img)
 
-    label = tk.Label(root, text="↓ Drag and drop images on plus ↓")
+    label = tk.Label(root, text="↓ Drag and drop images here ↓")
     label.pack(padx=10, pady=10)
 
     img_label = tk.Label(root, image=img)
     img_label.pack(padx=10, pady=10)
 
-    img_label.drop_target_register(DND_FILES)
-    img_label.dnd_bind('<<Drop>>', on_drop)
+    root.drop_target_register(DND_FILES)
+    root.dnd_bind('<<Drop>>', on_drop)
     root.mainloop()
 
 if __name__ == '__main__':
