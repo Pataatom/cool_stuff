@@ -4,14 +4,14 @@ from curses import wrapper
 stream = cv2.VideoCapture(0)
 if not stream.isOpened():
     raise IOError("Can't open camera")
-while  True:
-    ret, frame = stream.read()
+while True:
+    ret, frame = stream.read()  # ret == return
     if not ret:
         raise IOError("No more camera for today")
 
     cv2.imshow("Webcam", frame)
-    if cv2.waitKey(1) == ord("q"):
+    if cv2.waitKey(1) == ord("q"):  # ord() cast q to its integer that is associated with its ascii number
         break
 
-stream.release()
-cv2.destroyAllWindows()
+stream.release()  # ending the stream
+cv2.destroyAllWindows()  # ending the stream
