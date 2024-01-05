@@ -83,7 +83,7 @@ def working_with_picture(pic, file_name):
     new_height = int(height*0.3676470588235294)
     image = image.resize((width, new_height))
     ascii_art = []
-    for y in tqdm(range(new_height)):
+    for y in tqdm(range(new_height)):  # tqdm is here used to show basic loading bar in console
         line = ""
         for x in range(width):
             px = image.getpixel((x, y))

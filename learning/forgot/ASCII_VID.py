@@ -1,5 +1,8 @@
 import cv2
+from PIL import Image
 from curses import wrapper
+
+# for some reason it turns out curses dont work on my machine
 
 stream = cv2.VideoCapture(0)
 if not stream.isOpened():
