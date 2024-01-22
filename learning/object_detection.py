@@ -23,8 +23,8 @@ cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
-    if ret == False:
-        IOError("Cam not recording")
+    if not ret:
+        raise IOError("Cam not recording")
 
     width = frame.shape[1]
     height = frame.shape[0]
