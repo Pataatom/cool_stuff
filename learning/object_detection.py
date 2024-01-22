@@ -3,6 +3,7 @@ import time
 import cv2
 import numpy as np
 confidence_threshold = 0.5 # if the confidence of the prediction is lower then this the prediction won't count
+count_of_bbox = 0
 
 caffe_model = r"C:\Users\pataa\PycharmProjects\cool_stuff\MobileNetSSD_deploy.caffemodel"
 prototxt = r"C:\Users\pataa\PycharmProjects\cool_stuff\MobileNetSSD_deploy.prototxt"
@@ -35,10 +36,11 @@ while True:
 
     # detections array is in the format 1,1,N,7, where N is the detected bounding boxes
     # for each detection, the description contains : [image_id, label, conf, x_min, y_min, x_max, y_max]
-    for i in range(detections.shape[2]): # detections.shape[2] contains the number of detected bbox in frame, why [2] tho
-        confidence = detections[0, 0, i, 2] # number 2 is the selector of which info from detection you want to access
+    for i in range(detections.shape[2]):  # detections.shape[2] contains the number of detected bbox in frame, why [2] tho
+        confidence = detections[0, 0, i, 2]  # number 2 is the selector of which info from detection you want to access
         if confidence > confidence_threshold:
 
+            count_of_bbox += 1
             class_id = int(detections[0, 0, i, 1])
 
             # scale to the frame
@@ -48,7 +50,7 @@ while True:
             y_bottom_right = int(detections[0, 0, i, 6] * height)
 
             # draw bbox around the detected object
-            cv2.rectangle(frame, (x_top_left, y_top_left), (x_bottom_right, y_bottom_right), (255, 0, 0))
+            cv2.rectangle(frame, (x_top_left, y_top_left), (x_bottom_right, y_bottom_right), (0, 255, 0), 2)
 
             if class_id in classNames:
                 label = classNames[class_id] + ": " + str(int(confidence*100)) + "%"
