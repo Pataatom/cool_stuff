@@ -1,13 +1,20 @@
 import time
-
+import os
 import cv2
 import numpy as np
 confidence_threshold = 0.5 # if the confidence of the prediction is lower then this the prediction won't count
 count_of_bbox = 0
 
+'''
 caffe_model = r"C:\Users\pataa\PycharmProjects\cool_stuff\MobileNetSSD_deploy.caffemodel"
 prototxt = r"C:\Users\pataa\PycharmProjects\cool_stuff\MobileNetSSD_deploy.prototxt"
+'''
 
+try:
+    caffe_model = os.path.abspath("src/MobileNetSSD_deploy.caffemodel")
+    prototxt = os.path.abspath("src/MobileNetSSD_deploy.prototxt")
+except:
+    raise IOError("Can't find needed file of a model")
 
 # read a network model (pre-trained) stored in Caffe framework's format
 net = cv2.dnn.readNetFromCaffe(prototxt, caffe_model)
