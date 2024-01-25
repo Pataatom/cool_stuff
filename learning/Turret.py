@@ -8,9 +8,8 @@ averaged_num_of_people = 0
 people_averaging_list = []
 frames_for_averaging = 10
 
-caffe_model = r"C:\Users\pataa\PycharmProjects\cool_stuff\MobileNetSSD_deploy.caffemodel"  # Pre-trained model weights
-prototxt = r"C:\Users\pataa\PycharmProjects\cool_stuff\MobileNetSSD_deploy.prototxt"# Model definition is stored in this file
-
+caffe_model = r"MobileNetSSD_deploy.caffemodel"  # Pre-trained model weights
+prototxt = r"MobileNetSSD_deploy.prototxt"  # Model definition is stored in this file
 
 # read a network model (pre-trained) stored in Caffe framework's format
 net = cv2.dnn.readNetFromCaffe(prototxt, caffe_model)
@@ -40,7 +39,7 @@ while True:
 
     # detections array is in the format 1,1,N,7, where N is the detected bounding boxes
     # for each detection, the description contains : [image_id, label, conf, x_min, y_min, x_max, y_max]
-    for i in range(detections.shape[2]):  # detections.shape[2] contains the max possible number of detected bbox in frame
+    for i in range(detections.shape[2]):  # detections.shape[2] contains the max possible num of detected bbox in frame
         confidence = detections[0, 0, i, 2]  # number 2 is the selector of which info from detection you want to access
         if confidence > confidence_threshold:
 
@@ -54,7 +53,7 @@ while True:
 
             if class_id in classNames:
                 count_of_people += 1
-                label = classNames[class_id] + ": " + str(int(confidence*100)) + "%"
+                label = classNames[class_id] + ": " + str(int(confidence * 100)) + "%"
 
                 # draw bbox around the detected person
                 if averaged_num_of_people == 1:  # if there is only one person, then he becomes target
@@ -68,9 +67,9 @@ while True:
 
                 # draw bounding box around the text (OPTIONAL)
                 cv2.rectangle(frame, (x_top_left - 1, y_top_left - h - 9),
-                                  (x_top_left + w, y_top_left + t - 9), (0, 0, 0), cv2.FILLED)
+                              (x_top_left + w, y_top_left + t - 9), (0, 0, 0), cv2.FILLED)
                 cv2.putText(frame, label, (x_top_left, y_top_left - 9),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, color_of_text, 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, color_of_text, 2)
 
     people_averaging_list.append(count_of_people)
     if len(people_averaging_list) == 20:  # averaging frames
@@ -79,16 +78,15 @@ while True:
         for num in people_averaging_list:
             averaged_num_of_people += num
 
-        averaged_num_of_people = averaged_num_of_people/len(people_averaging_list)
+        averaged_num_of_people = averaged_num_of_people / len(people_averaging_list)
         print(round(averaged_num_of_people))
         people_averaging_list.clear()
 
     # fucking showing you what I got
     cv2.imshow("Turret", frame)
 
-    if cv2.waitKey(1) >= 0: # break with any key I suppose
+    if cv2.waitKey(1) >= 0:  # break with any key I suppose
         break
 
 cap.release()
 cv2.destroyAllWindows()
-
