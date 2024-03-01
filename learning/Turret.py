@@ -1,6 +1,6 @@
 import cv2
 
-confidence_threshold = 0.5  # if the confidence of the prediction is lower than this the prediction won't count
+confidence_threshold = 0.7  # if the confidence of the prediction is lower than this the prediction won't count
 color_of_bbox = (0, 255, 0)
 color_of_text = (0, 255, 0)
 count_of_people = 0
@@ -65,9 +65,11 @@ while True:
                 (w, h), t = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
                 # y_top_left = max(y_top_left, h) # don't understand this line fully, have to play with it
 
-                # draw bounding box around the text (OPTIONAL)
+                '''
+                draw bounding box around the text (OPTIONAL)
                 cv2.rectangle(frame, (x_top_left - 1, y_top_left - h - 9),
                               (x_top_left + w, y_top_left + t - 9), (0, 0, 0), cv2.FILLED)
+                '''
                 cv2.putText(frame, label, (x_top_left, y_top_left - 9),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, color_of_text, 2)
 
