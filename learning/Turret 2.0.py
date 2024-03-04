@@ -33,11 +33,11 @@ while True:
     width = frame.shape[1]
     height = frame.shape[0]
 
+    # blob is for the model to understand
     blob = cv2.dnn.blobFromImage(frame, scalefactor=1 / 127.5, size=(300, 300), mean=(127.5, 127.5, 127.5), swapRB=True,
                                  crop=False)
-    # blob is for the model to understand
-    cv2.circle(frame, (int(width/2), int(height/2)), 5, (0, 0, 255), -1)
     net.setInput(blob)
+
     detections = net.forward()
 
     # detections array is in the format 1,1,N,7, where N is the detected bounding boxes
@@ -48,13 +48,19 @@ while True:
 
             class_id = int(detections[0, 0, i, 1])
 
-            # scale to the frame
-            x_top_left = int(detections[0, 0, i, 3] * width)  # The coordinates are normalized to the range [0, 1],
-            y_top_left = int(detections[0, 0, i, 4] * height)  # where 0 is the leftmost position and 1 is the right pos
-            x_bottom_right = int(detections[0, 0, i, 5] * width)
-            y_bottom_right = int(detections[0, 0, i, 6] * height)
-
             if class_id in classNames:
+                # scale to the frame
+                x_top_left = int(detections[0, 0, i, 3] * width)  # The coordinates are normalized to the range [0, 1],
+                y_top_left = int(detections[0, 0, i, 4] * height)  # where 0 is the leftmost position and 1 is the right
+                x_bottom_right = int(detections[0, 0, i, 5] * width)
+                y_bottom_right = int(detections[0, 0, i, 6] * height)
+
+                # ____TARGET____
+                target_point = (int(x_top_left+abs(x_top_left-x_bottom_right)/2),
+                                int(y_top_left+abs(y_top_left-y_bottom_right)/2))
+                cv2.circle(frame, target_point, 5, (0, 0, 255), -1)
+                # ____TARGET____
+
                 count_of_people += 1
                 label = classNames[class_id] + ": " + str(int(confidence * 100)) + "%"
 
