@@ -3,7 +3,7 @@ import cv2
 cap = cv2.VideoCapture(0)
 
 # fps
-fps = cap.get(cv2.CAP_PROP_FPS)
+fps = cap.get(cv2.CAP_PROP_FPS)  # mostly 30
 
 confidence_threshold = 0.7  # if the confidence of the prediction is lower than this the prediction won't count
 
@@ -56,8 +56,7 @@ while True:
                 y_bottom_right = int(detections[0, 0, i, 6] * height)
 
                 # ____TARGET____
-                target_point = (int(x_top_left+abs(x_top_left-x_bottom_right)/2),
-                                int(y_top_left+abs(y_top_left-y_bottom_right)/2))
+                target_point = (int(x_top_left+abs(x_top_left-x_bottom_right)/2), 240) # 480 is the height of the window
                 cv2.circle(frame, target_point, 5, (0, 0, 255), -1)
                 # ____TARGET____
 
@@ -80,10 +79,10 @@ while True:
                 '''
                 cv2.putText(frame, label, (x_top_left, y_top_left - 9),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, color_of_text, 2)
-
+    # ____num of people on average____
     people_averaging_list.append(count_of_people)
     if len(people_averaging_list) == fps:  # averaging frames
-        averaged_num_of_people = 0
+        averaged_num_of_people = 0  # I do realize that using this variable for more things is bad practice
 
         for num in people_averaging_list:
             averaged_num_of_people += num
@@ -91,6 +90,7 @@ while True:
         averaged_num_of_people = averaged_num_of_people / len(people_averaging_list)
         print(round(averaged_num_of_people))
         people_averaging_list.clear()
+    # ____num of people on average____
 
     # fucking showing you what I got
     cv2.imshow("Turret", frame)
