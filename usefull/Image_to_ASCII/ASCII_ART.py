@@ -3,7 +3,13 @@ import tkinter as tk
 from tkinterdnd2 import TkinterDnD, DND_FILES
 import os
 from PIL import Image, ImageTk
-from tqdm import tqdm
+from tkinter import ttk
+import tqdm
+
+root = TkinterDnD.Tk()
+progress = tk.IntVar()
+progress_bar = ttk.Progressbar(root, length=250, maximum=250, variable=progress)
+
 
 file_name = ""
 ascii_characters_by_surface_10 = " .:-=+*#%@"
@@ -66,7 +72,7 @@ def pixel_to_ascii(pixel, extension):
         # I know there is some clear solution to this, but I am just too dumb
     else:
         print("I don't support this extension, sry")
-        time.sleep()
+        time.sleep(1)
 
 
 def working_with_picture(pic, file_name):
@@ -83,11 +89,16 @@ def working_with_picture(pic, file_name):
     new_height = int(height*0.3676470588235294)
     image = image.resize((width, new_height))
     ascii_art = []
-    for y in tqdm(range(new_height)):  # tqdm is here used to show basic loading bar in console
+    one_step = 250 / new_height
+    another_step = one_step
+    for y in range(new_height):  # tqdm is here used to show basic loading bar in console
+        progress.set(another_step)
         line = ""
+        print(another_step)
         for x in range(width):
             px = image.getpixel((x, y))
             line += pixel_to_ascii(px, extension)
+        another_step += one_step
         ascii_art.append(line)
     saving_ascii_art(ascii_art, file_name)  # Call the saving_ascii_art function to save the ASCII art
 
@@ -107,8 +118,7 @@ def on_drop(event):
 
 
 def main():
-    root = TkinterDnD.Tk()
-    root.title("Ascii_gene")
+    root.title("Ascii_art")
     root.geometry("250x150")
 
     img = Image.open(r"more.png")
@@ -119,6 +129,8 @@ def main():
 
     img_label = tk.Label(root, image=img)
     img_label.pack(padx=10, pady=10)
+
+    progress_bar.pack()
 
     root.drop_target_register(DND_FILES)
     root.dnd_bind('<<Drop>>', on_drop)
