@@ -35,20 +35,20 @@ while True:
     net.setInput(blob)
     detections = net.forward()
 
-    # detections array is in the format 1,1,N,7, where N is the detected bounding boxes
+    # detections array is in the format 1,1,N,7, where N is number of the detected bounding boxes
     # for each detection, the description contains : [image_id, label, conf, x_min, y_min, x_max, y_max]
-    for i in range(detections.shape[2]):  # detections.shape[2] contains the max  num of detected bbox in frame
-        confidence = detections[0, 0, i, 2]  # number 2 is the selector of which info from detection you want to access
+    for detection in range(detections.shape[2]):  # detections.shape[2] contains the max num of detected bbox in frame
+        confidence = detections[0, 0, detection, 2]  # number 2 is the selector of which info from detection you want to access
         if confidence > confidence_threshold:
 
             count_of_bbox += 1
-            class_id = int(detections[0, 0, i, 1])
+            class_id = int(detections[0, 0, detection, 1])
 
             # scale to the frame
-            x_top_left = int(detections[0, 0, i, 3] * width)
-            y_top_left = int(detections[0, 0, i, 4] * height)
-            x_bottom_right = int(detections[0, 0, i, 5] * width)
-            y_bottom_right = int(detections[0, 0, i, 6] * height)
+            x_top_left = int(detections[0, 0, detection, 3] * width)
+            y_top_left = int(detections[0, 0, detection, 4] * height)
+            x_bottom_right = int(detections[0, 0, detection, 5] * width)
+            y_bottom_right = int(detections[0, 0, detection, 6] * height)
 
             # draw bbox around the detected object
             cv2.rectangle(frame, (x_top_left, y_top_left), (x_bottom_right, y_bottom_right), (0, 255, 0), 2)
