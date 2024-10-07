@@ -6,7 +6,7 @@ def pc_shut(cas):
 
 
 decision = ""
-while ecision.upper() not in ("A", "N"):
+while decision.upper() not in ("A", "N"):
     decision = input("Chcete vypnout pc? A/N> ")
 if decision.upper() == "A":
     cas = int(input("Za jak dlouho se ma pc vypnout? (V min)> "))
